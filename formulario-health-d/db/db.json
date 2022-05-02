@@ -1,0 +1,23 @@
+{
+  "usuarios": [
+    {
+      "nome": "Italo",
+      "dataNasc": "2002-05-07T00:00:00.000Z",
+      "sexo": "",
+      "nomeDoPai": "aaa",
+      "nomeDaMae": "bbb",
+      "profissao": "",
+      "id": 1
+    },
+    {
+      "nome": "daw",
+      "dataNasc": "2000-04-22",
+      "sexo": "",
+      "nomeDoPai": "33",
+      "nomeDaMae": "222",
+      "profissao": "Administrador",
+      "generos": "Feminino",
+      "id": 2
+    }
+  ]
+}
