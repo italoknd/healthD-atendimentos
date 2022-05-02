@@ -172,6 +172,7 @@ export default {
               this.mensagem = ''
             }, 4000)
           } else {
+            console.log('csidcsnd')
             UserServices.save(this.pessoaFisica)
 
               .then(res => {
@@ -192,6 +193,7 @@ export default {
               })
           }
         } else {
+          console.log('alou')
           if (
             this.pessoaFisica.nomeDaMae.length == 0 ||
             this.pessoaFisica.nomeDoPai.length == 0
@@ -205,6 +207,25 @@ export default {
               this.mensagem = ''
               this.warning = false
             }, 4000)
+          } else {
+            UserServices.save(this.pessoaFisica)
+
+              .then(res => {
+                this.pessoaFisica = {}
+                console.log(res.data)
+                this.dadosEnviados = true
+                this.backgroundColor = '#26A96C'
+
+                this.mensagem = 'Dados enviados com sucesso!'
+
+                setTimeout(() => {
+                  this.mensagem = ''
+                  this.dadosEnviados = false
+                }, 4000)
+              })
+              .catch(err => {
+                console.log(err)
+              })
           }
         }
       }
