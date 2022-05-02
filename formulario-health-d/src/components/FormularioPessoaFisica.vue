@@ -30,7 +30,7 @@
         <div class="b-3 mb-4 mt-4">
           <label class="form-label borda">Sexo:</label>
           <select
-            v-model="pessoaFisica.generos"
+            v-model="pessoaFisica.sexo"
             class="form-select"
             aria-label="Default select example"
           >
@@ -222,6 +222,7 @@ h2 {
   text-align: center;
   background: #5dcbfa;
   color: white;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.315);
 }
 
 .form {
