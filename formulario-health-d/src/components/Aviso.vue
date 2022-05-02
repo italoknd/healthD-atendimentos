@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="{background: background}">
     <p>{{ mensagem }}</p>
   </div>
 </template>
@@ -9,6 +9,7 @@ export default {
   name: 'Aviso',
   props:{
     mensagem: String,
+    background: String
   }
 }
 </script>
@@ -16,11 +17,10 @@ export default {
 <style scoped>
 div{
   padding: 1.2em 1em;
-  background: #ff1c28;
   color: white;
   border-radius: .4em;
   max-width: 240px;
-  margin: auto;
+  margin: 2em auto;
   box-shadow: 4px 2px 5px rgba(0, 0, 0, 0.322);
   animation: fadeOut 4s;
 }

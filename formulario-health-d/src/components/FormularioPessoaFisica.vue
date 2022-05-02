@@ -1,17 +1,20 @@
 <template>
   <div>
     <h2>Formulário Pessoa Física:</h2>
-    <Aviso :mensagem="mensagem" v-show="dataInvalida" />
+    <Aviso
+      :mensagem="mensagem"
+      :background="backgroundColor"
+      v-show="dataInvalida || dadosEnviados || warning"
+    />
     <div class="form">
       <form @submit.prevent="submit()">
         <div class="mb-3">
-          <label class="form-label borda">Nome:</label>
+          <label class="form-label borda" id="nome">Nome:</label>
           <input
             required
             v-model="pessoaFisica.nome"
             type="text"
             class="form-control"
-            id="exampleInputEmail1"
             aria-describedby="emailHelp"
           />
         </div>
@@ -22,7 +25,6 @@
             v-model="pessoaFisica.dataNasc"
             type="date"
             class="form-control"
-            id="exampleInputPassword1"
           />
         </div>
         <div class="b-3 mb-4 mt-4">
@@ -32,7 +34,6 @@
             class="form-select"
             aria-label="Default select example"
           >
-            <option selected>Informe o sexo:</option>
             <option v-for="genero in generos" :key="genero.id">
               {{ genero.nome }}
             </option>
@@ -44,7 +45,6 @@
             v-model="pessoaFisica.nomeDoPai"
             type="text"
             class="form-control"
-            id="exampleInputEmail1"
             aria-describedby="emailHelp"
           />
         </div>
@@ -54,7 +54,6 @@
             v-model="pessoaFisica.nomeDaMae"
             type="text"
             class="form-control"
-            id="exampleInputEmail1"
             aria-describedby="emailHelp"
           />
         </div>
@@ -65,7 +64,6 @@
             class="form-select"
             aria-label="Default select example"
           >
-            <option selected>Informe a sua profissão:</option>
             <option v-for="profissao in profissoes" :key="profissao.id">
               {{ profissao.nome }}
             </option>
@@ -80,11 +78,12 @@
 <script>
 //libs
 import moment from 'moment'
-import useVuelidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
+
+//serviços
+import UserServices from '../services/UserServices'
+import FormServices from '../services/FormServices'
 
 //componentes
-import UserServices from '../services/UserServices'
 import Aviso from './Aviso.vue'
 
 export default {
@@ -92,8 +91,6 @@ export default {
 
   data() {
     return {
-      v$: useVuelidate(),
-
       pessoaFisica: {
         nome: '',
         dataNasc: '',
@@ -102,38 +99,48 @@ export default {
         nomeDaMae: '',
         profissao: ''
       },
+      generos: [],
+      profissoes: [],
       pessoasFisicas: [],
-      profissoes: [
-        { nome: 'Tec. em Informática', id: 1 },
-        { nome: 'Contador', id: 2 },
-        { nome: 'Administrador', id: 3 },
-        { nome: 'Eng. Eletricista', id: 4 },
-        { nome: 'Administrador', id: 5 },
-        { nome: 'Nenhuma das Alternativas', id: 6 }
-      ],
-      generos: [
-        { nome: 'Masculino', id: 1 },
-        { nome: 'Feminino', id: 2 },
-        { nome: 'Prefiro não informar', id: 3 }
-      ],
       mensagem: '',
-      dataInvalida: false
+      backgroundColor: '',
+      dataInvalida: false,
+      dadosEnviados: false,
+      warning: false
     }
   },
-  validations() {
-    return {
-      pessoaFisica: {
-        nomeDaMae: { required },
-        profissao: { required }
-      }
-    }
+  mounted() {
+    this.getGeneros()
+    this.getProfissoes()
   },
   methods: {
+    getGeneros() {
+      FormServices.listarGeneros()
+
+        .then(res => {
+          this.generos = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    getProfissoes() {
+      FormServices.listarProfissoes()
+
+        .then(res => {
+          this.profissoes = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
     submit() {
       let dataNasc = new Date(this.pessoaFisica.dataNasc)
         .toISOString()
         .split('T')[0]
-        
+
       let dataNasc2 = new Date(this.pessoaFisica.dataNasc)
       let data1 = moment(dataNasc)
       let dataAtual = new Date().toISOString().split('T')[0]
@@ -146,6 +153,7 @@ export default {
 
       if (diferencaEmDias <= 0) {
         this.dataInvalida = true
+        this.backgroundColor = '#ff1c28'
         this.mensagem = 'Ano, mês ou dia informado(s) inválido(s)!'
 
         setTimeout(() => {
@@ -155,30 +163,48 @@ export default {
       } else {
         if (idadePessoaFisica >= 18) {
           if (this.pessoaFisica.profissao.length == 0) {
-            console.log(this.pessoaFisica)
-            alert('campo profissão obrigatório!')
-            return
+            this.warning = true
+            this.mensagem = 'Campo de profissão obrigatório!'
+            this.backgroundColor = 'orange'
+
+            setTimeout(() => {
+              this.warning = false
+              this.mensagem = ''
+            }, 4000)
+          } else {
+            UserServices.save(this.pessoaFisica)
+
+              .then(res => {
+                this.pessoaFisica = {}
+                console.log(res.data)
+                this.dadosEnviados = true
+                this.backgroundColor = '#26A96C'
+
+                this.mensagem = 'Dados enviados com sucesso!'
+
+                setTimeout(() => {
+                  this.mensagem = ''
+                  this.dadosEnviados = false
+                }, 4000)
+              })
+              .catch(err => {
+                console.log(err)
+              })
           }
-          UserServices.save(this.pessoaFisica)
-
-            .then(res => {
-              this.pessoaFisica = {}
-              console.log(res.data)
-              this.mensagem = 'Dados enviados com sucesso!'
-
-              setTimeout(() => {
-                this.mensagem = ''
-              }, 4000)
-            })
-            .catch(err => {
-              console.log(err)
-            })
         } else {
           if (
             this.pessoaFisica.nomeDaMae.length == 0 ||
             this.pessoaFisica.nomeDoPai.length == 0
           ) {
-            alert('Campos obrigatórios: Nome do Pai, Nome da Mãe')
+            this.warning = true
+            this.mensagem =
+              'Campos obrigatórios não preenchidos: Nome do pai, nome da mãe'
+            this.backgroundColor = 'orange'
+
+            setTimeout(() => {
+              this.mensagem = ''
+              this.warning = false
+            }, 4000)
           }
         }
       }
