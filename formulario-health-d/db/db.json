@@ -40,23 +40,5 @@
     }
   ],
   "usuarios": [
-    {
-      "nome": "Italo",
-      "dataNasc": "2002-04-12",
-      "sexo": "Masculino",
-      "nomeDoPai": "xaasw",
-      "nomeDaMae": "weee",
-      "profissao": "Nenhuma das Alternativas",
-      "id": 1
-    },
-    {
-      "nome": "alerto",
-      "dataNasc": "2013-12-12",
-      "sexo": "Masculino",
-      "nomeDoPai": "Yan",
-      "nomeDaMae": "Helena",
-      "profissao": "Eng. Eletricista",
-      "id": 2
-    }
   ]
 }

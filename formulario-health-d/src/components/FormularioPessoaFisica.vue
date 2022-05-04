@@ -12,6 +12,8 @@
           <label class="form-label borda" id="nome">Nome:</label>
           <input
             required
+            minlength="3"
+            title="Este campo requer pelo menos 3 letras para se tornar válido."
             v-model="pessoaFisica.nome"
             type="text"
             class="form-control"
@@ -30,6 +32,7 @@
         <div class="b-3 mb-4 mt-4">
           <label class="form-label borda">Sexo:</label>
           <select
+            required
             v-model="pessoaFisica.sexo"
             class="form-select"
             aria-label="Default select example"
@@ -42,6 +45,8 @@
         <div class="mb-3">
           <label class="form-label borda">Nome do pai:</label>
           <input
+            minlength="3"
+            title="Este campo requer pelo menos 3 letras para se tornar válido."
             v-model="pessoaFisica.nomeDoPai"
             type="text"
             class="form-control"
@@ -51,6 +56,8 @@
         <div class="mb-3">
           <label class="form-label borda">Nome da mãe:</label>
           <input
+            minlength="3"
+            title="Este campo requer pelo menos 3 letras para se tornar válido."
             v-model="pessoaFisica.nomeDaMae"
             type="text"
             class="form-control"
@@ -147,8 +154,6 @@ export default {
       let dataAtual2 = new Date()
       let data2 = moment(dataAtual)
       let idadePessoaFisica = data2.diff(data1, 'years')
-      console.log(idadePessoaFisica)
-
       let diferencaEmDias = dataAtual2 - dataNasc2
 
       if (diferencaEmDias <= 0) {
@@ -172,7 +177,6 @@ export default {
               this.mensagem = ''
             }, 4000)
           } else {
-            console.log('csidcsnd')
             UserServices.save(this.pessoaFisica)
 
               .then(res => {
@@ -193,7 +197,6 @@ export default {
               })
           }
         } else {
-          console.log('alou')
           if (
             this.pessoaFisica.nomeDaMae.length == 0 ||
             this.pessoaFisica.nomeDoPai.length == 0
@@ -250,7 +253,7 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1em;
+  margin: 1.5em 0;
 }
 
 label {
