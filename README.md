@@ -174,5 +174,3 @@ lista.filter(numero=>{
 console.log(lista.reverse())
 
 ```
-
-## Resposta da questão 6
